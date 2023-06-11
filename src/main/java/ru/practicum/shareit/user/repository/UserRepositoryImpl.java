@@ -5,8 +5,9 @@ import org.springframework.stereotype.Repository;
 import ru.practicum.shareit.exception.ObjectNotFoundException;
 import ru.practicum.shareit.user.model.User;
 
-import java.util.Collection;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Slf4j
@@ -14,13 +15,12 @@ import java.util.Map;
 public class UserRepositoryImpl implements UserRepository {
 
     private final Map<Long, User> users = new HashMap<>();
-    private final Map<Long, String> userIdEmail = new HashMap<>();
     private long assignId = 1;
 
     @Override
-    public Collection<User> findAll() {
+    public List<User> findAll() {
         log.info("Получение всех пользователей");
-        return users.values();
+        return new ArrayList<>(users.values());
     }
 
     @Override
@@ -36,25 +36,18 @@ public class UserRepositoryImpl implements UserRepository {
     public User save(User user) {
         user.setId(assignId++);
         users.put(user.getId(), user);
-        userIdEmail.put(user.getId(), user.getEmail());
         log.info("Пользователь добавлен: {}", user.getId());
         return user;
     }
 
     @Override
     public User update(User user) {
-        if (user.getEmail() != null && !user.getEmail().equals(userIdEmail.get(user.getId()))) {
-            userIdEmail.remove(user.getId());
-            userIdEmail.put(user.getId(), user.getEmail());
-        }
         log.info("Пользователь обновлен: {}", user.getId());
         return users.get(user.getId());
     }
 
     @Override
     public void delete(Long userId) {
-        User user = users.get(userId);
-        userIdEmail.remove(user.getId());
         users.remove(userId);
         log.info("Пользователь удален: {}", userId);
     }
@@ -66,7 +59,7 @@ public class UserRepositoryImpl implements UserRepository {
 
     @Override
     public boolean isEmailExist(String email) {
-        return userIdEmail.containsValue(email);
+        return users.values().stream().map(User::getEmail).anyMatch(emailUser -> emailUser.equals(email));
     }
 
 }
