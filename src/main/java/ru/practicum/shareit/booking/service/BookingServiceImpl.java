@@ -130,7 +130,7 @@ public class BookingServiceImpl implements BookingService {
         if (!item.getIsAvailable()) {
             throw new ValidationException(String.format("Item with id %d is not available", item.getId()));
         }
-        if (!dateValidator.IsCorrectDate(bookingCreateDto.getStart(), bookingCreateDto.getEnd())) {
+        if (!dateValidator.isCorrectDate(bookingCreateDto.getStart(), bookingCreateDto.getEnd())) {
             throw new ValidationException("Date is not correct");
         }
         bookingCreateDto.setBookerId(user.getId());

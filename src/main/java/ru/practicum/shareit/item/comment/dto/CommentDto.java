@@ -7,7 +7,8 @@ import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDateTime;
 
-@Data @Builder
+@Data
+@Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class CommentDto {
 

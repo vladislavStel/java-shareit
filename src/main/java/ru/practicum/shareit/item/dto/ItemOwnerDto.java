@@ -7,7 +7,10 @@ import ru.practicum.shareit.item.comment.dto.CommentDto;
 
 import java.util.Set;
 
-@Getter @Setter @Builder @AllArgsConstructor
+@Getter
+@Setter
+@Builder
+@AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ItemOwnerDto {
 

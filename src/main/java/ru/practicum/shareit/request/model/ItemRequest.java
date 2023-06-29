@@ -9,7 +9,10 @@ import java.time.LocalDate;
 
 @Entity
 @Table(name = "requests")
-@Data @Builder @AllArgsConstructor @NoArgsConstructor
+@Data
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ItemRequest {
 

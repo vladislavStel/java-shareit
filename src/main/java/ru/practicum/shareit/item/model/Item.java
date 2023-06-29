@@ -9,7 +9,10 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "items")
-@Data @Builder @AllArgsConstructor @NoArgsConstructor
+@Data
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class Item {
 

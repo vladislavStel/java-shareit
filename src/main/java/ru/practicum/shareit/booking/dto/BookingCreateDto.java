@@ -8,7 +8,10 @@ import ru.practicum.shareit.validation.GroupValidation;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
-@Getter @Setter @Builder @AllArgsConstructor
+@Getter
+@Setter
+@Builder
+@AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class BookingCreateDto {
 
