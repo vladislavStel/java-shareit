@@ -34,11 +34,11 @@ CREATE TABLE IF NOT EXISTS bookings (
     start_date TIMESTAMP WITHOUT TIME ZONE NOT NULL,
     end_date TIMESTAMP WITHOUT TIME ZONE NOT NULL,
     item_id BIGINT NOT NULL,
-    broker_id BIGINT NOT NULL,
+    booker_id BIGINT NOT NULL,
     status VARCHAR(50),
     CONSTRAINT pk_bookings PRIMARY KEY (id),
     CONSTRAINT fk_bookings_to_item_id FOREIGN KEY (item_id) REFERENCES items(id),
-    CONSTRAINT fk_bookings_to_broker_id FOREIGN KEY (broker_id) REFERENCES  users(id)
+    CONSTRAINT fk_bookings_to_broker_id FOREIGN KEY (booker_id) REFERENCES  users(id)
 );
 
 CREATE TABLE IF NOT EXISTS comments (
@@ -46,6 +46,7 @@ CREATE TABLE IF NOT EXISTS comments (
     text VARCHAR(500) NOT NULL,
     item_id BIGINT NOT NULL,
     author_id BIGINT NOT NULL,
+    created TIMESTAMP WITHOUT TIME ZONE DEFAULT NOW(),
     CONSTRAINT pk_comments PRIMARY KEY (id),
     CONSTRAINT fk_comments_to_item_id FOREIGN KEY (item_id) REFERENCES items(id),
     CONSTRAINT fk_comments_to_author_id FOREIGN KEY (author_id) REFERENCES users(id)
