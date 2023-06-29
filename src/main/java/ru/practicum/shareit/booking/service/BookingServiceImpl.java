@@ -44,7 +44,7 @@ public class BookingServiceImpl implements BookingService {
         userService.validateUserById(userId);
         List<Booking> bookings;
         LocalDateTime time = LocalDateTime.now();
-        Pageable page = PageRequest.of(from/size, size, Sort.by("start").descending());
+        Pageable page = PageRequest.of(from / size, size, Sort.by("start").descending());
         switch (state.toUpperCase()) {
             case "ALL":
                 bookings = bookingRepository.findByBookerId(userId, page);
@@ -77,7 +77,7 @@ public class BookingServiceImpl implements BookingService {
         userService.validateUserById(userId);
         List<Booking> bookings;
         LocalDateTime time = LocalDateTime.now();
-        Pageable page = PageRequest.of(from/size, size, Sort.by("start").descending());
+        Pageable page = PageRequest.of(from / size, size, Sort.by("start").descending());
         switch (state.toUpperCase()) {
             case "ALL":
                 bookings = bookingRepository.findAllByItem_Owner_Id(userId, page);
