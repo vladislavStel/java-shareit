@@ -40,11 +40,11 @@ public class BookingServiceImpl implements BookingService {
     private final UserService userService;
 
     @Override
-    public List<BookingDto> getBookingsCurrentUser(Long userId, String state) {
+    public List<BookingDto> getBookingsCurrentUser(Long userId, String state, Integer from, Integer size) {
         userService.validateUserById(userId);
         List<Booking> bookings;
         LocalDateTime time = LocalDateTime.now();
-        Pageable page = PageRequest.of(0, 500, Sort.by("start").descending());
+        Pageable page = PageRequest.of(from/size, size, Sort.by("start").descending());
         switch (state.toUpperCase()) {
             case "ALL":
                 bookings = bookingRepository.findByBookerId(userId, page);
@@ -73,11 +73,11 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    public List<BookingDto> getBookingsAllItemCurrentUser(Long userId, String state) {
+    public List<BookingDto> getBookingsAllItemCurrentUser(Long userId, String state, Integer from, Integer size) {
         userService.validateUserById(userId);
         List<Booking> bookings;
         LocalDateTime time = LocalDateTime.now();
-        Pageable page = PageRequest.of(0, 500, Sort.by("start").descending());
+        Pageable page = PageRequest.of(from/size, size, Sort.by("start").descending());
         switch (state.toUpperCase()) {
             case "ALL":
                 bookings = bookingRepository.findAllByItem_Owner_Id(userId, page);

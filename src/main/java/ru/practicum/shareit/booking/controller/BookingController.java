@@ -9,6 +9,7 @@ import ru.practicum.shareit.booking.service.BookingService;
 import ru.practicum.shareit.validation.GroupValidation.Create;
 
 import javax.validation.constraints.Positive;
+import javax.validation.constraints.PositiveOrZero;
 import java.util.List;
 
 @Validated
@@ -27,16 +28,22 @@ public class BookingController {
 
     @GetMapping
     public List<BookingDto> getBookingsCurrentUser(@RequestHeader("X-Sharer-User-Id") @Positive Long userId,
-                                                   @RequestParam(defaultValue = "ALL") String state) {
-        return bookingService.getBookingsCurrentUser(userId, state);
+                                                   @RequestParam(defaultValue = "ALL") String state,
+                                                   @RequestParam(name = "from", required = false, defaultValue = "0")
+                                                       @PositiveOrZero Integer from,
+                                                   @RequestParam(name = "size", required = false, defaultValue = "500")
+                                                       @Positive Integer size) {
+        return bookingService.getBookingsCurrentUser(userId, state, from, size);
     }
 
     @GetMapping("/owner")
-    public List<BookingDto> getBookingsAllItemCurrentUser(@RequestHeader("X-Sharer-User-Id")
-                                                              @Positive Long userId,
-                                                          @RequestParam(value = "state",
-                                                          defaultValue = "ALL") String state) {
-        return bookingService.getBookingsAllItemCurrentUser(userId, state);
+    public List<BookingDto> getBookingsAllItemCurrentUser(@RequestHeader("X-Sharer-User-Id") @Positive Long userId,
+                                                   @RequestParam(defaultValue = "ALL") String state,
+                                                   @RequestParam(name = "from", required = false, defaultValue = "0")
+                                                       @PositiveOrZero Integer from,
+                                                   @RequestParam(name = "size", required = false, defaultValue = "500")
+                                                       @Positive Integer size) {
+        return bookingService.getBookingsAllItemCurrentUser(userId, state, from, size);
     }
 
     @PostMapping

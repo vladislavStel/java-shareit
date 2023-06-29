@@ -53,8 +53,13 @@ public class ItemServiceImpl implements ItemService {
         List<ItemOwnerDto> itemsOwnerDto = items.stream()
                 .map(ItemMapper::toItemOwnerDto)
                 .collect(Collectors.toList());
-        for (ItemOwnerDto i : itemsOwnerDto) {
-            addLastAndNextBookings(i);
+        List<Booking> bookings = bookingRepository.findBookingsByItemIn(items);
+        if (bookings != null && !bookings.isEmpty()) {
+            for (ItemOwnerDto i : itemsOwnerDto) {
+                List<Booking> bookingsOwnerItems = bookings.stream()
+                        .filter(f -> f.getItem().getId().equals(i.getId())).collect(Collectors.toList());
+                addLastAndNextBookings(i, bookingsOwnerItems);
+            }
         }
         return itemsOwnerDto;
     }
@@ -67,8 +72,9 @@ public class ItemServiceImpl implements ItemService {
         ItemOwnerDto itemOwnerDto = ItemMapper.toItemOwnerDto(item);
         Set<Comment> comments = commentRepository.findCommentsByItem_Id(itemId);
         itemOwnerDto.setComments(comments.stream().map(CommentMapper::toCommentDto).collect(Collectors.toSet()));
-        if (item.getOwner().getId().equals(userId)) {
-            addLastAndNextBookings(itemOwnerDto);
+        List<Booking> bookings = bookingRepository.findBookingsByItem_Id(itemOwnerDto.getId());
+        if (bookings != null && !bookings.isEmpty() && item.getOwner().getId().equals(userId)) {
+            addLastAndNextBookings(itemOwnerDto, bookings);
         }
         return itemOwnerDto;
     }
@@ -135,23 +141,21 @@ public class ItemServiceImpl implements ItemService {
         return CommentMapper.toCommentDto(commentRepository.save(comment));
     }
 
-    private void addLastAndNextBookings(ItemOwnerDto itemOwnerDto) {
-        System.out.println(LocalDateTime.now());
-        List<Booking> bookings = bookingRepository.findBookingsByItem_Id(itemOwnerDto.getId());
-        itemOwnerDto.setLastBooking(bookings.stream()
-                .filter(s -> s.getStart().isBefore(LocalDateTime.now()))
-                .filter(s -> s.getStatus().equals(StatusBooking.APPROVED))
-                .map(BookingMapper::toBookingItemDto)
-                .max(Comparator.comparing(BookingItemDto::getEnd))
-                .orElse(null)
-        );
-        itemOwnerDto.setNextBooking(bookings.stream()
-                .filter(s -> s.getStart().isAfter(LocalDateTime.now()))
-                .filter(s -> s.getStatus().equals(StatusBooking.APPROVED))
-                .map(BookingMapper::toBookingItemDto)
-                .min(Comparator.comparing(BookingItemDto::getStart))
-                .orElse(null)
-        );
+    private void addLastAndNextBookings(ItemOwnerDto itemOwnerDto, List<Booking> bookings) {
+            itemOwnerDto.setLastBooking(bookings.stream()
+                    .filter(s -> s.getStart().isBefore(LocalDateTime.now()))
+                    .filter(s -> s.getStatus().equals(StatusBooking.APPROVED))
+                    .map(BookingMapper::toBookingItemDto)
+                    .max(Comparator.comparing(BookingItemDto::getEnd))
+                    .orElse(null)
+            );
+            itemOwnerDto.setNextBooking(bookings.stream()
+                    .filter(s -> s.getStart().isAfter(LocalDateTime.now()))
+                    .filter(s -> s.getStatus().equals(StatusBooking.APPROVED))
+                    .map(BookingMapper::toBookingItemDto)
+                    .min(Comparator.comparing(BookingItemDto::getStart))
+                    .orElse(null)
+            );
     }
 
 }

@@ -4,6 +4,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import ru.practicum.shareit.booking.enums.StatusBooking;
 import ru.practicum.shareit.booking.model.Booking;
+import ru.practicum.shareit.item.model.Item;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -34,6 +35,8 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
     List<Booking> findAllByItem_Owner_IdAndStatus(Long userId, StatusBooking status, Pageable page);
 
     List<Booking> findBookingsByItem_Id(Long itemId);
+
+    List<Booking> findBookingsByItemIn(List<Item> items);
 
     List<Booking> findBookingsByItem_IdAndStatusOrderByEndAsc(Long itemId, StatusBooking status);
 
