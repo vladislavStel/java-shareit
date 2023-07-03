@@ -25,6 +25,7 @@ import ru.practicum.shareit.user.repository.UserRepository;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -110,7 +111,8 @@ public class BookingServiceImpl implements BookingService {
     public BookingDto getBookingById(Long userId, Long bookingId) {
         Booking booking = bookingRepository.findById(bookingId).orElseThrow(() ->
                 new ObjectNotFoundException(String.format("Booking not found: id=%d", bookingId)));
-        if (booking.getBooker().getId().equals(userId) || booking.getItem().getOwner().getId().equals(userId)) {
+        if (Objects.equals(booking.getBooker().getId(), userId) ||
+                Objects.equals(booking.getItem().getOwner().getId(), userId)) {
             return BookingMapper.toBookingDto(booking);
         }
         throw new ObjectNotFoundException(String.format("Wrong user: id=%d", userId));
@@ -123,7 +125,7 @@ public class BookingServiceImpl implements BookingService {
                 new ObjectNotFoundException(String.format("User not found: id=%d", userId)));
         Item item = itemRepository.findById(bookingCreateDto.getItemId()).orElseThrow(() ->
                 new ObjectNotFoundException(String.format("Item not found: id=%d", bookingCreateDto.getItemId())));
-        if (item.getOwner().equals(user)) {
+        if (Objects.equals(item.getOwner(), user)) {
             throw new ObjectNotFoundException(String
                     .format("Item with id %d is not available for booking", item.getId()));
         }
@@ -146,7 +148,7 @@ public class BookingServiceImpl implements BookingService {
                 new ObjectNotFoundException(String.format("Booking not found: id=%d", bookingId)));
         User user = userRepository.findById(userId).orElseThrow(() ->
                 new ObjectNotFoundException(String.format("User not found: id=%d", userId)));
-        if (!booking.getItem().getOwner().equals(user)) {
+        if (!Objects.equals(booking.getItem().getOwner(), user)) {
             throw new ObjectNotFoundException("You are not the owner of this item!");
         }
         if (booking.getStatus() != StatusBooking.WAITING) {

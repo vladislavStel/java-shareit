@@ -11,6 +11,7 @@ import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.repository.UserRepository;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
@@ -43,7 +44,7 @@ class UserServiceImpl implements UserService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ObjectNotFoundException(String.format("User not found: id=%d", userId)));
         User validuser = userRepository.findByEmail(userDto.getEmail()).orElse(null);
-        if (validuser != null && !validuser.getId().equals(userId)) {
+        if (validuser != null && !Objects.equals(validuser.getId(), userId)) {
             throw new UserAlreadyExistException("Пользователь с электронной почтой " +
                     userDto.getEmail() + " уже зарегистрирован.");
         }

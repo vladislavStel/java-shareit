@@ -28,10 +28,7 @@ import ru.practicum.shareit.user.repository.UserRepository;
 import ru.practicum.shareit.user.service.UserService;
 
 import java.time.LocalDateTime;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -57,7 +54,7 @@ public class ItemServiceImpl implements ItemService {
         if (bookings != null && !bookings.isEmpty()) {
             for (ItemOwnerDto i : itemsOwnerDto) {
                 List<Booking> bookingsOwnerItems = bookings.stream()
-                        .filter(f -> f.getItem().getId().equals(i.getId())).collect(Collectors.toList());
+                        .filter(f -> Objects.equals(f.getItem().getId(), i.getId())).collect(Collectors.toList());
                 addLastAndNextBookings(i, bookingsOwnerItems);
             }
         }
@@ -73,7 +70,7 @@ public class ItemServiceImpl implements ItemService {
         Set<Comment> comments = commentRepository.findCommentsByItem_Id(itemId);
         itemOwnerDto.setComments(comments.stream().map(CommentMapper::toCommentDto).collect(Collectors.toSet()));
         List<Booking> bookings = bookingRepository.findBookingsByItem_Id(itemOwnerDto.getId());
-        if (bookings != null && !bookings.isEmpty() && item.getOwner().getId().equals(userId)) {
+        if (bookings != null && !bookings.isEmpty() && Objects.equals(item.getOwner().getId(), userId)) {
             addLastAndNextBookings(itemOwnerDto, bookings);
         }
         return itemOwnerDto;
@@ -106,7 +103,7 @@ public class ItemServiceImpl implements ItemService {
         User user = userRepository.findById(userId).orElseThrow(null);
         Item item = itemRepository.findById(itemId)
                 .orElseThrow(() -> new ObjectNotFoundException(String.format("Item not found: id=%d", itemId)));
-        if (!item.getOwner().equals(user)) {
+        if (!Objects.equals(item.getOwner(), user)) {
             throw new ObjectNotFoundException(String.format("User not found: id=%d", userId));
         }
         if (itemDto.getName() != null) {
@@ -135,7 +132,7 @@ public class ItemServiceImpl implements ItemService {
         if (bookings.stream().noneMatch(s -> s.getEnd().isBefore(LocalDateTime.now()))) {
             throw new ValidationException("You can add a comment only after the booking is completed.");
         }
-        if (bookings.stream().noneMatch(s -> s.getBooker().equals(user))) {
+        if (bookings.stream().noneMatch(s -> Objects.equals(s.getBooker(), user))) {
             throw new ValidationException("You can add a comment only after the booking");
         }
         return CommentMapper.toCommentDto(commentRepository.save(comment));
@@ -144,14 +141,14 @@ public class ItemServiceImpl implements ItemService {
     private void addLastAndNextBookings(ItemOwnerDto itemOwnerDto, List<Booking> bookings) {
             itemOwnerDto.setLastBooking(bookings.stream()
                     .filter(s -> s.getStart().isBefore(LocalDateTime.now()))
-                    .filter(s -> s.getStatus().equals(StatusBooking.APPROVED))
+                    .filter(s -> Objects.equals(s.getStatus(), StatusBooking.APPROVED))
                     .map(BookingMapper::toBookingItemDto)
                     .max(Comparator.comparing(BookingItemDto::getEnd))
                     .orElse(null)
             );
             itemOwnerDto.setNextBooking(bookings.stream()
                     .filter(s -> s.getStart().isAfter(LocalDateTime.now()))
-                    .filter(s -> s.getStatus().equals(StatusBooking.APPROVED))
+                    .filter(s -> Objects.equals(s.getStatus(), StatusBooking.APPROVED))
                     .map(BookingMapper::toBookingItemDto)
                     .min(Comparator.comparing(BookingItemDto::getStart))
                     .orElse(null)
