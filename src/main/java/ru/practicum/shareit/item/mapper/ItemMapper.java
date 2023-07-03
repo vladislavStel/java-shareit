@@ -1,32 +1,45 @@
 package ru.practicum.shareit.item.mapper;
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
+import org.springframework.stereotype.Component;
 import ru.practicum.shareit.item.dto.ItemDto;
+import ru.practicum.shareit.item.dto.ItemOwnerDto;
 import ru.practicum.shareit.item.model.Item;
-import ru.practicum.shareit.request.ItemRequest;
 import ru.practicum.shareit.user.model.User;
 
+@Component
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class ItemMapper {
 
     public static ItemDto toItemDto(Item item) {
-        return new ItemDto(
-                item.getId(),
-                item.getName(),
-                item.getDescription(),
-                item.getIsAvailable(),
-                item.getRequest() != null ? item.getRequest().getId() : null
-        );
+        return ItemDto.builder()
+                .id(item.getId())
+                .name(item.getName())
+                .description(item.getDescription())
+                .available(item.getIsAvailable())
+                .requestId(item.getRequest() != null ? item.getRequest().getId() : null)
+                .build();
     }
 
-    public static Item toItem(ItemDto itemDto, User owner) {
-        ItemRequest itemRequest = new ItemRequest();
-        itemRequest.setId(itemDto.getRequestId() != null ? itemDto.getRequestId() : null);
+    public static Item toCreateItem(ItemDto itemDto, User owner) {
         return new Item(
                 itemDto.getName(),
                 itemDto.getDescription(),
                 itemDto.getAvailable(),
                 owner,
-                itemRequest
+        null
         );
+    }
+
+    public static ItemOwnerDto toItemOwnerDto(Item item) {
+        return ItemOwnerDto.builder()
+                .id(item.getId())
+                .name(item.getName())
+                .description(item.getDescription())
+                .available(item.getIsAvailable())
+                .requestId(item.getRequest() != null ? item.getRequest().getId() : null)
+                .build();
     }
 
 }

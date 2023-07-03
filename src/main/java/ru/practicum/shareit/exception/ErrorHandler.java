@@ -16,6 +16,13 @@ import java.util.stream.Collectors;
 @RestControllerAdvice
 public class ErrorHandler {
 
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponse handleUnsupportedStateException(final UnsupportedStateException e) {
+        log.error(e.getMessage(), e);
+        return new ErrorResponse(HttpStatus.BAD_REQUEST, e.getMessage());
+    }
+
     @ExceptionHandler(UserAlreadyExistException.class)
     @ResponseStatus(HttpStatus.CONFLICT)
     public ErrorResponse handleUserAlreadyExistException(Exception e) {
