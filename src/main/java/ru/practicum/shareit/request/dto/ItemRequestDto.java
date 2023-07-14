@@ -1,31 +1,31 @@
 package ru.practicum.shareit.request.dto;
 
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.*;
 import lombok.experimental.FieldDefaults;
-import ru.practicum.shareit.user.model.User;
+import ru.practicum.shareit.item.dto.ItemDto;
+import ru.practicum.shareit.validation.GroupValidation.Create;
 
-import javax.validation.constraints.*;
-import java.time.LocalDate;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
+import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
+@Setter
+@Builder
+@EqualsAndHashCode
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ItemRequestDto {
 
-    @Positive
     Long id;
 
-    @NotBlank
-    @Size(max = 200)
+    @NotBlank(groups = {Create.class})
+    @Size(max = 200, groups = {Create.class})
     String description;
 
-    @NotNull
-    User requestor;
+    LocalDateTime created;
 
-    @NotNull
-    @FutureOrPresent
-    LocalDate created;
+    List<ItemDto> items;
 
 }

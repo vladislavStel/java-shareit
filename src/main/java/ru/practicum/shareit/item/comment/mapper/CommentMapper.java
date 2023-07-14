@@ -9,6 +9,7 @@ import ru.practicum.shareit.item.comment.model.Comment;
 @Component
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class CommentMapper {
+
     public static CommentDto toCommentDto(Comment comment) {
         return CommentDto
                 .builder()
@@ -18,4 +19,5 @@ public class CommentMapper {
                 .created(comment.getCreated())
                 .build();
     }
+
 }
