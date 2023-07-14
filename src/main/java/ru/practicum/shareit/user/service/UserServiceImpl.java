@@ -1,6 +1,7 @@
 package ru.practicum.shareit.user.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.shareit.exception.ObjectNotFoundException;
@@ -35,18 +36,22 @@ class UserServiceImpl implements UserService {
     @Transactional
     @Override
     public UserDto saveUser(UserDto userDto) {
-        return UserMapper.toUserDto(userRepository.save(UserMapper.toUser(userDto)));
+        try {
+            return UserMapper.toUserDto(userRepository.save(UserMapper.toUser(userDto)));
+        } catch (DataIntegrityViolationException e) {
+            throw new UserAlreadyExistException("User with email " +
+                    userDto.getEmail() + " is already registered.");
+        }
     }
 
     @Transactional
     @Override
     public UserDto updateUser(Long userId, UserDto userDto) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new ObjectNotFoundException(String.format("User not found: id=%d", userId)));
+        User user = getById(userId);
         User validuser = userRepository.findByEmail(userDto.getEmail()).orElse(null);
         if (validuser != null && !Objects.equals(validuser.getId(), userId)) {
-            throw new UserAlreadyExistException("Пользователь с электронной почтой " +
-                    userDto.getEmail() + " уже зарегистрирован.");
+            throw new UserAlreadyExistException("User with email " +
+                    userDto.getEmail() + " is already registered.");
         }
         if (userDto.getName() != null) {
             user.setName(userDto.getName());
@@ -62,6 +67,12 @@ class UserServiceImpl implements UserService {
     public void deleteUser(Long userId) {
         validateUserById(userId);
         userRepository.deleteById(userId);
+    }
+
+    @Override
+    public User getById(Long userId) {
+        return userRepository.findById(userId)
+                .orElseThrow(() -> new ObjectNotFoundException(String.format("User not found: id=%d", userId)));
     }
 
     @Override
