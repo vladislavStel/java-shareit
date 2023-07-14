@@ -269,11 +269,11 @@ class ItemControllerTest {
     @Test
     void shouldCreateCommentItem_ReturnStatus200AndCorrectJson() throws Exception {
         CommentDto commentDto = commentDtoBuilder.build();
-        CommentDto OutCommentDto = commentDtoBuilder.id(1L).authorName("name").created(LocalDateTime.now()).build();
+        CommentDto outCommentDto = commentDtoBuilder.id(1L).authorName("name").created(LocalDateTime.now()).build();
         String json = mapper.writeValueAsString(commentDto);
-        String jsonAdded = mapper.writeValueAsString(OutCommentDto);
+        String jsonAdded = mapper.writeValueAsString(outCommentDto);
 
-        when(itemService.createComment(1L, 1L, commentDto)).thenReturn(OutCommentDto);
+        when(itemService.createComment(1L, 1L, commentDto)).thenReturn(outCommentDto);
         mockMvc.perform(post(url + "/1/comment")
                         .contentType(MediaType.APPLICATION_JSON)
                         .header("X-Sharer-User-Id", 1)

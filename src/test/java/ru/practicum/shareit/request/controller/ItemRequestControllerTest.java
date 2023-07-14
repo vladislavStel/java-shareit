@@ -186,11 +186,11 @@ class ItemRequestControllerTest {
     @Test
     void shouldCreateRequest_ReturnStatus200AndCorrectJson() throws Exception {
         ItemRequestDto itemRequestDto = itemRequestDtoBuilder.build();
-        ItemRequestDto OutItemRequestDto = itemRequestDtoBuilder.id(1L).build();
+        ItemRequestDto outItemRequestDto = itemRequestDtoBuilder.id(1L).build();
         String json = mapper.writeValueAsString(itemRequestDto);
-        String jsonAdded = mapper.writeValueAsString(OutItemRequestDto);
+        String jsonAdded = mapper.writeValueAsString(outItemRequestDto);
 
-        when(itemRequestService.saveRequest(1L, itemRequestDto)).thenReturn(OutItemRequestDto);
+        when(itemRequestService.saveRequest(1L, itemRequestDto)).thenReturn(outItemRequestDto);
         mockMvc.perform(post(url)
                         .contentType(MediaType.APPLICATION_JSON)
                         .header("X-Sharer-User-Id", 1)

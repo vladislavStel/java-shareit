@@ -30,7 +30,7 @@ class ItemRepositoryTest {
     @Autowired
     private ItemRequestRepository itemRequestRepository;
 
-    private final PageRequest PAGE = PageRequest.of(0, 1);
+    private static final PageRequest PAGE = PageRequest.of(0, 1);
 
     private User owner;
     private Item item;

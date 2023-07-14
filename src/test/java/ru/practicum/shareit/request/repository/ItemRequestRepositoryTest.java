@@ -25,8 +25,8 @@ class ItemRequestRepositoryTest {
     @Autowired
     private UserRepository userRepository;
 
-    private final Sort SORT = Sort.by(Sort.Direction.DESC, "created");
-    private final PageRequest page = PageRequest.of(0, 1, SORT);
+    private static final Sort SORT = Sort.by(Sort.Direction.DESC, "created");
+    private static final PageRequest page = PageRequest.of(0, 1, SORT);
 
     private ItemRequest itemRequest;
     private User requester;
