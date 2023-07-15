@@ -9,7 +9,8 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "items")
-@Data
+@Getter
+@Setter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
@@ -38,13 +39,5 @@ public class Item {
     @ToString.Exclude
     @JoinColumn(name = "request_id")
     ItemRequest request;
-
-    public Item(String name, String description, Boolean isAvailable, User owner, ItemRequest request) {
-        this.name = name;
-        this.description = description;
-        this.isAvailable = isAvailable;
-        this.owner = owner;
-        this.request = request;
-    }
 
 }
