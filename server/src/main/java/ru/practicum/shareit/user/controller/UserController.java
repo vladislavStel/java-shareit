@@ -8,8 +8,6 @@ import ru.practicum.shareit.user.service.UserService;
 import javax.validation.constraints.Positive;
 import java.util.List;
 
-import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
-
 @RestController
 @RequiredArgsConstructor
 @RequestMapping(path = "/users")
