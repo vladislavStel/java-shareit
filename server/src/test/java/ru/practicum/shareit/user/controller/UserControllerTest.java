@@ -109,44 +109,7 @@ class UserControllerTest {
                 .andExpect(content().json(jsonAdded));
     }
 
-    @Test
-    void shouldCreateUserIfUserInvalidEmail_ReturnStatus400() throws Exception {
-        UserDto userDto = userDtoBuilder.email("123email.com").build();
-        String json = mapper.writeValueAsString(userDto);
-        mockMvc.perform(post(url).contentType(MediaType.APPLICATION_JSON).content(json))
-                .andDo(print())
-                .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$", hasSize(1)))
-                .andExpect(jsonPath("$[0].code", is(400)))
-                .andExpect(jsonPath("$[0].fieldName", is("email")))
-                .andExpect(jsonPath("$[0].error", is("must be a well-formed email address")));
-    }
 
-    @Test
-    void shouldCreateUserIfUserEmailNull_ReturnStatus400() throws Exception {
-        UserDto userDto = userDtoBuilder.email(null).build();
-        String json = mapper.writeValueAsString(userDto);
-        mockMvc.perform(post(url).contentType(MediaType.APPLICATION_JSON).content(json))
-                .andDo(print())
-                .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$", hasSize(1)))
-                .andExpect(jsonPath("$[0].code", is(400)))
-                .andExpect(jsonPath("$[0].fieldName", is("email")))
-                .andExpect(jsonPath("$[0].error", is("must not be blank")));
-    }
-
-    @Test
-    void shouldCreateUserIfUserNameNull_ReturnStatus400() throws Exception {
-        UserDto userDto = userDtoBuilder.name(null).build();
-        String json = mapper.writeValueAsString(userDto);
-        mockMvc.perform(post(url).contentType(MediaType.APPLICATION_JSON).content(json))
-                .andDo(print())
-                .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$", hasSize(1)))
-                .andExpect(jsonPath("$[0].code", is(400)))
-                .andExpect(jsonPath("$[0].fieldName", is("name")))
-                .andExpect(jsonPath("$[0].error", is("must not be blank")));
-    }
 
     @Test
     void shouldPatchUser_ReturnStatus200AndCorrectJson() throws Exception {

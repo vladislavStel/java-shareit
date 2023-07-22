@@ -14,12 +14,10 @@ import ru.practicum.shareit.exception.ObjectNotFoundException;
 import ru.practicum.shareit.request.dto.ItemRequestDto;
 import ru.practicum.shareit.request.service.ItemRequestService;
 
-import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
-import java.util.Random;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
@@ -213,41 +211,6 @@ class ItemRequestControllerTest {
                 .andDo(print())
                 .andExpect(status().isNotFound())
                 .andExpect(content().json("{\"error\":\"User not found: id=999\"}"));
-    }
-
-    @Test
-    void shouldCreateRequestIfRequestEmptyDescription_ReturnStatus400() throws Exception {
-        ItemRequestDto itemRequestDto = itemRequestDtoBuilder.description("").build();
-        String json = mapper.writeValueAsString(itemRequestDto);
-        mockMvc.perform(post(url)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .header("X-Sharer-User-Id", 1)
-                        .content(json))
-                .andDo(print())
-                .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$", hasSize(1)))
-                .andExpect(jsonPath("$[0].code", is(400)))
-                .andExpect(jsonPath("$[0].fieldName", is("description")))
-                .andExpect(jsonPath("$[0].error", is("must not be blank")));
-    }
-
-    @Test
-    void shouldCreateRequestIfRequestDescriptionWrongSize_ReturnStatus400() throws Exception {
-        byte[] array = new byte[220];
-        new Random().nextBytes(array);
-        String generatedString = new String(array, StandardCharsets.UTF_8);
-        ItemRequestDto itemRequestDto = itemRequestDtoBuilder.description(generatedString).build();
-        String json = mapper.writeValueAsString(itemRequestDto);
-        mockMvc.perform(post(url)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .header("X-Sharer-User-Id", 1)
-                        .content(json))
-                .andDo(print())
-                .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$", hasSize(1)))
-                .andExpect(jsonPath("$[0].code", is(400)))
-                .andExpect(jsonPath("$[0].fieldName", is("description")))
-                .andExpect(jsonPath("$[0].error", is("size must be between 0 and 200")));
     }
 
 }

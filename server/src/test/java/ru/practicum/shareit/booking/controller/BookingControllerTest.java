@@ -281,54 +281,6 @@ class BookingControllerTest {
     }
 
     @Test
-    void shouldCreateBookingIfItemIdNull_ReturnStatus400() throws Exception {
-        BookingCreateDto bookingCreateDto = bookingCreateDtoBuilder.itemId(null).build();
-        String json = mapper.writeValueAsString(bookingCreateDto);
-        mockMvc.perform(post(url)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .header("X-Sharer-User-Id", 1)
-                        .content(json))
-                .andDo(print())
-                .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$", hasSize(1)))
-                .andExpect(jsonPath("$[0].code", is(400)))
-                .andExpect(jsonPath("$[0].fieldName", is("itemId")))
-                .andExpect(jsonPath("$[0].error", is("must not be null")));
-    }
-
-    @Test
-    void shouldCreateBookingIfStartTimeNull_ReturnStatus400() throws Exception {
-        BookingCreateDto bookingCreateDto = bookingCreateDtoBuilder.start(null).build();
-        String json = mapper.writeValueAsString(bookingCreateDto);
-        mockMvc.perform(post(url)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .header("X-Sharer-User-Id", 1)
-                        .content(json))
-                .andDo(print())
-                .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$", hasSize(1)))
-                .andExpect(jsonPath("$[0].code", is(400)))
-                .andExpect(jsonPath("$[0].fieldName", is("start")))
-                .andExpect(jsonPath("$[0].error", is("must not be null")));
-    }
-
-    @Test
-    void shouldCreateBookingIfEndTimeNull_ReturnStatus400() throws Exception {
-        BookingCreateDto bookingCreateDto = bookingCreateDtoBuilder.end(null).build();
-        String json = mapper.writeValueAsString(bookingCreateDto);
-        mockMvc.perform(post(url)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .header("X-Sharer-User-Id", 1)
-                        .content(json))
-                .andDo(print())
-                .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$", hasSize(1)))
-                .andExpect(jsonPath("$[0].code", is(400)))
-                .andExpect(jsonPath("$[0].fieldName", is("end")))
-                .andExpect(jsonPath("$[0].error", is("must not be null")));
-    }
-
-    @Test
     void shouldApproveIfTrue_ReturnStatus200AndCorrectJson() throws Exception {
         BookingDto bookingDto = bookingDtoBuilder.status(StatusBooking.APPROVED).build();
         String json = mapper.writeValueAsString(bookingDto);

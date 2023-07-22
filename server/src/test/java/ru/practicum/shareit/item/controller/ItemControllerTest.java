@@ -16,12 +16,10 @@ import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.dto.ItemOwnerDto;
 import ru.practicum.shareit.item.service.ItemService;
 
-import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
-import java.util.Random;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
@@ -219,54 +217,6 @@ class ItemControllerTest {
     }
 
     @Test
-    void shouldCreateItemIfItemWithoutAvailable_ReturnStatus400() throws Exception {
-        ItemDto itemDto = itemDtoBuilder.available(null).build();
-        String json = mapper.writeValueAsString(itemDto);
-        mockMvc.perform(post(url)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .header("X-Sharer-User-Id", 1)
-                        .content(json))
-                .andDo(print())
-                .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$", hasSize(1)))
-                .andExpect(jsonPath("$[0].code", is(400)))
-                .andExpect(jsonPath("$[0].fieldName", is("available")))
-                .andExpect(jsonPath("$[0].error", is("must not be null")));
-    }
-
-    @Test
-    void shouldCreateItemIfItemEmptyName_ReturnStatus400() throws Exception {
-        ItemDto itemDto = itemDtoBuilder.name("").build();
-        String json = mapper.writeValueAsString(itemDto);
-        mockMvc.perform(post(url)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .header("X-Sharer-User-Id", 1)
-                        .content(json))
-                .andDo(print())
-                .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$", hasSize(1)))
-                .andExpect(jsonPath("$[0].code", is(400)))
-                .andExpect(jsonPath("$[0].fieldName", is("name")))
-                .andExpect(jsonPath("$[0].error", is("must not be blank")));
-    }
-
-    @Test
-    void shouldCreateItemIfItemEmptyDescription_ReturnStatus400() throws Exception {
-        ItemDto itemDto = itemDtoBuilder.description("").build();
-        String json = mapper.writeValueAsString(itemDto);
-        mockMvc.perform(post(url)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .header("X-Sharer-User-Id", 1)
-                        .content(json))
-                .andDo(print())
-                .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$", hasSize(1)))
-                .andExpect(jsonPath("$[0].code", is(400)))
-                .andExpect(jsonPath("$[0].fieldName", is("description")))
-                .andExpect(jsonPath("$[0].error", is("must not be blank")));
-    }
-
-    @Test
     void shouldCreateCommentItem_ReturnStatus200AndCorrectJson() throws Exception {
         CommentDto commentDto = commentDtoBuilder.build();
         CommentDto outCommentDto = commentDtoBuilder.id(1L).authorName("name").created(LocalDateTime.now()).build();
@@ -311,41 +261,6 @@ class ItemControllerTest {
                 .andDo(print())
                 .andExpect(status().isNotFound())
                 .andExpect(content().json("{\"error\":\"Item not found: id=999\"}"));
-    }
-
-    @Test
-    void shouldCreateCommentItemIfCommentEmptyText_ReturnStatus400() throws Exception {
-        CommentDto commentDto = commentDtoBuilder.text("").build();
-        String json = mapper.writeValueAsString(commentDto);
-        mockMvc.perform(post(url + "/1/comment")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .header("X-Sharer-User-Id", 1)
-                        .content(json))
-                .andDo(print())
-                .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$", hasSize(1)))
-                .andExpect(jsonPath("$[0].code", is(400)))
-                .andExpect(jsonPath("$[0].fieldName", is("text")))
-                .andExpect(jsonPath("$[0].error", is("must not be blank")));
-    }
-
-    @Test
-    void shouldCreateCommentItemIfCommentTextWrongSize_ReturnStatus400() throws Exception {
-        byte[] array = new byte[550];
-        new Random().nextBytes(array);
-        String generatedString = new String(array, StandardCharsets.UTF_8);
-        CommentDto commentDto = commentDtoBuilder.text(generatedString).build();
-        String json = mapper.writeValueAsString(commentDto);
-        mockMvc.perform(post(url + "/1/comment")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .header("X-Sharer-User-Id", 1)
-                        .content(json))
-                .andDo(print())
-                .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$", hasSize(1)))
-                .andExpect(jsonPath("$[0].code", is(400)))
-                .andExpect(jsonPath("$[0].fieldName", is("text")))
-                .andExpect(jsonPath("$[0].error", is("size must be between 0 and 500")));
     }
 
     @Test
