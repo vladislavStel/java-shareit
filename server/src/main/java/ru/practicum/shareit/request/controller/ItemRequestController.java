@@ -5,7 +5,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.request.dto.ItemRequestDto;
 import ru.practicum.shareit.request.service.ItemRequestService;
-import ru.practicum.shareit.validation.GroupValidation.Create;
 
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.PositiveOrZero;
@@ -41,7 +40,7 @@ public class ItemRequestController {
 
     @PostMapping
     public ItemRequestDto createRequest(@RequestHeader("X-Sharer-User-Id") @Positive Long userId,
-                                        @Validated(Create.class) @RequestBody ItemRequestDto itemRequestDto) {
+                                        @RequestBody ItemRequestDto itemRequestDto) {
         return itemRequestService.saveRequest(userId, itemRequestDto);
     }
 

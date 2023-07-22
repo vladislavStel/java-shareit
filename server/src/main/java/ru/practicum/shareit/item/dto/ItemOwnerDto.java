@@ -15,19 +15,12 @@ import java.util.List;
 public class ItemOwnerDto {
 
     Long id;
-
     String name;
-
     String description;
-
     Boolean available;
-
     BookingItemDto lastBooking;
-
     BookingItemDto nextBooking;
-
     Long requestId;
-
     List<CommentDto> comments;
 
 }

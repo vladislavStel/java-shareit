@@ -18,17 +18,10 @@ import java.time.LocalDateTime;
 public class BookingDto {
 
     Long id;
-
-    @NotNull(groups = {GroupValidation.Create.class})
     LocalDateTime start;
-
-    @NotNull(groups = {GroupValidation.Create.class})
     LocalDateTime end;
-
     ItemDto item;
-
     UserDto booker;
-
     StatusBooking status;
 
 }
