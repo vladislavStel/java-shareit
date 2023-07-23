@@ -3,7 +3,7 @@ package ru.practicum.shareit.booking.dto;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import ru.practicum.shareit.booking.enums.StatusBooking;
-import ru.practicum.shareit.validation.GroupValidation;
+import ru.practicum.shareit.validation.GroupValidation.Create;
 
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
@@ -16,15 +16,15 @@ import java.time.LocalDateTime;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class BookingCreateDto {
 
-    private Long id;
+    Long id;
 
-    @NotNull(groups = {GroupValidation.Create.class})
+    @NotNull(groups = {Create.class})
     LocalDateTime start;
 
-    @NotNull(groups = {GroupValidation.Create.class})
+    @NotNull(groups = {Create.class})
     LocalDateTime end;
 
-    @NotNull(groups = {GroupValidation.Create.class})
+    @NotNull(groups = {Create.class})
     Long itemId;
 
     Long bookerId;

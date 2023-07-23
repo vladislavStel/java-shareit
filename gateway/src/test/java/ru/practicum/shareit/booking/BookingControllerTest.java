@@ -22,6 +22,7 @@ import java.time.LocalDateTime;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -123,6 +124,32 @@ class BookingControllerTest {
                 .andExpect(jsonPath("$[0].code", is(400)))
                 .andExpect(jsonPath("$[0].fieldName", is("end")))
                 .andExpect(jsonPath("$[0].error", is("must not be null")));
+    }
+
+    @Test
+    void shouldGetBookingsCurrentUserIfFromNegative_ReturnStatus400() throws Exception {
+        mockMvc.perform(get(url)
+                        .header("X-Sharer-User-Id", 1)
+                        .param("state", "WAITING")
+                        .param("from", "-1")
+                        .param("size", "10"))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$", hasSize(1)))
+                .andExpect(jsonPath("$[0].code", is(400)))
+                .andExpect(jsonPath("$[0].error", is("must be greater than or equal to 0")));
+    }
+
+    @Test
+    void shouldGetBookingsAllItemCurrentUserIfFromNegative_ReturnStatus400() throws Exception {
+        mockMvc.perform(get(url + "/owner")
+                        .header("X-Sharer-User-Id", 1)
+                        .param("state", "WAITING")
+                        .param("from", "-1")
+                        .param("size", "10"))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$", hasSize(1)))
+                .andExpect(jsonPath("$[0].code", is(400)))
+                .andExpect(jsonPath("$[0].error", is("must be greater than or equal to 0")));
     }
 
 }

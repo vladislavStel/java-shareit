@@ -151,19 +151,6 @@ class BookingControllerTest {
     }
 
     @Test
-    void shouldGetBookingsCurrentUserIfFromNegative_ReturnStatus400() throws Exception {
-        mockMvc.perform(get(url)
-                        .header("X-Sharer-User-Id", 1)
-                        .param("state", "WAITING")
-                        .param("from", "-1")
-                        .param("size", "10"))
-                .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$", hasSize(1)))
-                .andExpect(jsonPath("$[0].code", is(400)))
-                .andExpect(jsonPath("$[0].error", is("must be greater than or equal to 0")));
-    }
-
-    @Test
     void shouldGetBookingsCurrentUserIfStateFail_ReturnStatus400() throws Exception {
                 when(bookingService.getBookingsCurrentUser(1L, "FAIL", 0, 10))
                 .thenThrow(new UnsupportedStateException(String.format("Unknown state: %s", "FAIL")));
@@ -203,19 +190,6 @@ class BookingControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].id", is(1)))
                 .andExpect(jsonPath("$.size()", is(1)));
-    }
-
-    @Test
-    void shouldGetBookingsAllItemCurrentUserIfFromNegative_ReturnStatus400() throws Exception {
-        mockMvc.perform(get(url + "/owner")
-                        .header("X-Sharer-User-Id", 1)
-                        .param("state", "WAITING")
-                        .param("from", "-1")
-                        .param("size", "10"))
-                .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$", hasSize(1)))
-                .andExpect(jsonPath("$[0].code", is(400)))
-                .andExpect(jsonPath("$[0].error", is("must be greater than or equal to 0")));
     }
 
     @Test

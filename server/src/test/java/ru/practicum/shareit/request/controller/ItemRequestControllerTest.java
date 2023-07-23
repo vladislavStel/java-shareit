@@ -146,42 +146,6 @@ class ItemRequestControllerTest {
     }
 
     @Test
-    void shouldGetRequestsIfFromNegative_ReturnStatus400() throws Exception {
-        mockMvc.perform(get(url + "/all")
-                        .header("X-Sharer-User-Id", 1)
-                        .param("from", "-1"))
-                .andDo(print())
-                .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$", hasSize(1)))
-                .andExpect(jsonPath("$[0].code", is(400)))
-                .andExpect(jsonPath("$[0].error", is("must be greater than or equal to 0")));
-    }
-
-    @Test
-    void shouldGetRequestsIfSizeZero_ReturnStatus400() throws Exception {
-        mockMvc.perform(get(url + "/all")
-                        .header("X-Sharer-User-Id", 1)
-                        .param("size", "0"))
-                .andDo(print())
-                .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$", hasSize(1)))
-                .andExpect(jsonPath("$[0].code", is(400)))
-                .andExpect(jsonPath("$[0].error", is("must be greater than 0")));
-    }
-
-    @Test
-    void shouldGetRequestsIfSizeNegative_ReturnStatus400() throws Exception {
-        mockMvc.perform(get(url + "/all")
-                        .header("X-Sharer-User-Id", 1)
-                        .param("size", "-1"))
-                .andDo(print())
-                .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$", hasSize(1)))
-                .andExpect(jsonPath("$[0].code", is(400)))
-                .andExpect(jsonPath("$[0].error", is("must be greater than 0")));
-    }
-
-    @Test
     void shouldCreateRequest_ReturnStatus200AndCorrectJson() throws Exception {
         ItemRequestDto itemRequestDto = itemRequestDtoBuilder.build();
         ItemRequestDto outItemRequestDto = itemRequestDtoBuilder.id(1L).build();

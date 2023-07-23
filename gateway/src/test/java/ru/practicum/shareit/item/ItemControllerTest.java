@@ -21,6 +21,7 @@ import java.util.Random;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -146,6 +147,42 @@ class ItemControllerTest {
                 .andExpect(jsonPath("$[0].code", is(400)))
                 .andExpect(jsonPath("$[0].fieldName", is("text")))
                 .andExpect(jsonPath("$[0].error", is("size must be between 0 and 500")));
+    }
+
+    @Test
+    void shouldSearchItemIfFromNegative_ReturnStatus400() throws Exception {
+        mockMvc.perform(get(url + "/search")
+                        .param("from", "-1")
+                        .header("X-Sharer-User-Id", 1))
+                .andDo(print())
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$", hasSize(1)))
+                .andExpect(jsonPath("$[0].code", is(400)))
+                .andExpect(jsonPath("$[0].error", is("must be greater than or equal to 0")));
+    }
+
+    @Test
+    void shouldSearchItemIfSizeZero_ReturnStatus400() throws Exception {
+        mockMvc.perform(get(url + "/search")
+                        .param("size", "0")
+                        .header("X-Sharer-User-Id", 1))
+                .andDo(print())
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$", hasSize(1)))
+                .andExpect(jsonPath("$[0].code", is(400)))
+                .andExpect(jsonPath("$[0].error", is("must be greater than 0")));
+    }
+
+    @Test
+    void shouldSearchItemIfSizeNegative_ReturnStatus400() throws Exception {
+        mockMvc.perform(get(url + "/search")
+                        .param("size", "-1")
+                        .header("X-Sharer-User-Id", 1))
+                .andDo(print())
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$", hasSize(1)))
+                .andExpect(jsonPath("$[0].code", is(400)))
+                .andExpect(jsonPath("$[0].error", is("must be greater than 0")));
     }
 
 }

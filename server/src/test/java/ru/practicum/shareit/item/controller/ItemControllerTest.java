@@ -142,36 +142,6 @@ class ItemControllerTest {
     }
 
     @Test
-    void shouldSearchItemIfFromNegative_ReturnStatus400() throws Exception {
-        mockMvc.perform(get(url + "/search").param("from", "-1"))
-                .andDo(print())
-                .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$", hasSize(1)))
-                .andExpect(jsonPath("$[0].code", is(400)))
-                .andExpect(jsonPath("$[0].error", is("must be greater than or equal to 0")));
-    }
-
-    @Test
-    void shouldSearchItemIfSizeZero_ReturnStatus400() throws Exception {
-        mockMvc.perform(get(url + "/search").param("size", "0"))
-                .andDo(print())
-                .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$", hasSize(1)))
-                .andExpect(jsonPath("$[0].code", is(400)))
-                .andExpect(jsonPath("$[0].error", is("must be greater than 0")));
-    }
-
-    @Test
-    void shouldSearchItemIfSizeNegative_ReturnStatus400() throws Exception {
-        mockMvc.perform(get(url + "/search").param("size", "-1"))
-                .andDo(print())
-                .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$", hasSize(1)))
-                .andExpect(jsonPath("$[0].code", is(400)))
-                .andExpect(jsonPath("$[0].error", is("must be greater than 0")));
-    }
-
-    @Test
     void shouldCreateItem_ReturnStatus200AndCorrectJson() throws Exception {
         ItemDto itemDto = itemDtoBuilder.build();
         ItemDto itemDtoResponse = itemDtoBuilder.id(1L).build();

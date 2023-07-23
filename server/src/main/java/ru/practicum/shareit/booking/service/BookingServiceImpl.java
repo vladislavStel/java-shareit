@@ -16,7 +16,6 @@ import ru.practicum.shareit.booking.repository.BookingRepository;
 import ru.practicum.shareit.exception.UnsupportedStateException;
 import ru.practicum.shareit.item.service.ItemService;
 import ru.practicum.shareit.user.service.UserService;
-import ru.practicum.shareit.validation.DateValidator;
 import ru.practicum.shareit.exception.ObjectNotFoundException;
 import ru.practicum.shareit.exception.ValidationException;
 import ru.practicum.shareit.item.model.Item;
@@ -35,7 +34,6 @@ public class BookingServiceImpl implements BookingService {
 
     private final BookingRepository bookingRepository;
     private final ItemService itemService;
-    private final DateValidator dateValidator;
     private final UserService userService;
 
     @Override
@@ -127,9 +125,6 @@ public class BookingServiceImpl implements BookingService {
         }
         if (!item.getIsAvailable()) {
             throw new ValidationException(String.format("Item with id %d is not available", item.getId()));
-        }
-        if (!dateValidator.isCorrectDate(bookingCreateDto.getStart(), bookingCreateDto.getEnd())) {
-            throw new ValidationException("Date is not correct");
         }
         bookingCreateDto.setBookerId(user.getId());
         bookingCreateDto.setStatus(StatusBooking.WAITING);
