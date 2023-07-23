@@ -56,7 +56,7 @@ public class BookingController {
 	@PostMapping(consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
 	public ResponseEntity<Object> createBooking(@RequestHeader("X-Sharer-User-Id") @Positive long userId,
 									@Validated(Create.class) @RequestBody BookingCreateDto bookingCreateDto) {
-		if(!(bookingCreateDto.getStart().isAfter(LocalDateTime.now()) &&
+		if (!(bookingCreateDto.getStart().isAfter(LocalDateTime.now()) &&
 				bookingCreateDto.getEnd().isAfter(LocalDateTime.now()) &&
 				bookingCreateDto.getStart().isBefore(bookingCreateDto.getEnd()))) {
 			throw new ValidationException("Date is not correct");
